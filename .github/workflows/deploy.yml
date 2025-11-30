@@ -40,7 +40,9 @@ jobs:
       id-token: write # 用于验证部署来源的合法性
 
 
-
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # 部署后的 URL
     runs-on: ubuntu-latest
     steps:
       - name: 部署到 GitHub Pages
