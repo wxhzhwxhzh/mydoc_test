@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: 构建 Docusaurus
+    name: 1️⃣构建 Docusaurus
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
           path: build
 
   deploy:
-    name: 部署到 GitHub Pages
+    name: 2️⃣部署到 GitHub Pages
     needs: build
 
     # 授予 GITHUB_TOKEN 部署到 Pages 所需的权限
