@@ -1,31 +1,51 @@
-name: Deploy to GitHub Pages
+name: 部署到 GitHub Pages
 
 on:
   push:
     branches:
       - main
-
-permissions:
-  contents: write  # 添加这个权限
+    # 如果你想进一步定义触发器、路径等，可以查看 GitHub Actions 文档
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
 jobs:
-  deploy:
-    name: Deploy to GitHub Pages
+  build:
+    name: 构建 Docusaurus
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
         with:
-          node-version: 24
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: 安装依赖
         run: npm ci
-      - name: Build website
+      - name: 构建网站
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: 上传构建产物
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          path: build
+
+  deploy:
+    name: 部署到 GitHub Pages
+    needs: build
+
+    # 授予 GITHUB_TOKEN 部署到 Pages 所需的权限
+    permissions:
+      pages: write # 用于部署到 Pages
+      id-token: write # 用于验证部署来源的合法性
+
+    # 部署到 github-pages 环境
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
