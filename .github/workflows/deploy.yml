@@ -39,10 +39,7 @@ jobs:
       pages: write # 用于部署到 Pages
       id-token: write # 用于验证部署来源的合法性
 
-    # 部署到 github-pages 环境
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+
 
     runs-on: ubuntu-latest
     steps:
